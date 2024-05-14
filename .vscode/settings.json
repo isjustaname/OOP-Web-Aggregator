@@ -1,0 +1,8 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\duong\\Downloads\\lombok.jar",
+        "c:\\Users\\duong\\Downloads\\gson-2.10.1.jar",
+        "c:\\Users\\duong\\Downloads\\jsoup-1.17.2.jar"
+    ]
+}
