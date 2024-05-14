@@ -108,8 +108,8 @@ public class TrendFinder{
 	 * @throws FileNotFoundException 
 	 * @throws Exception
 	 */
-	public PairArray findMostTrending(int find_number ,String split_regex ,boolean ignore_downcase, String... extract_subjects) throws FileNotFoundException, IOException, ParseException {
-		PairArray trend_list = this.extractor.Frequency(split_regex, ignore_downcase, extract_subjects);
+	public PairArray findMostTrending(int find_number) throws FileNotFoundException, IOException, ParseException {
+		PairArray trend_list = this.extractor.Frequency("[,]", false, "tag");
 		PairArray most_trend = new PairArray();
 		//cắt dãy con không cần thiết tùy vào find_number
 		//trường hợp là số lượng từ tìm bằng độ sâu của cây vung đống
@@ -129,13 +129,12 @@ public class TrendFinder{
 	
 	public static void main(String[] args) throws Exception {
 		TrendFinder trend_finder = new TrendFinder("Data/Output.json");
-		String[] subjects = {"title", "tag"};
 		TrendData data_list = new TrendData();
-
 		
 		data_list.search_word = "Bitcoin";
-		data_list.most_trending = trend_finder.findMostTrending(8 ,"[ ,]", true, subjects);
+		data_list.most_trending = trend_finder.findMostTrending(8);
 		data_list.web_display = trend_finder.extractedWeb();
+		trend_finder.findMostTrending(9).printPair();
 		//trend_finder.trendOverTime("Bitcoin", 2).printPair();
 		//trend_finder.trendOverTime("Bitcoin", 4).printPair();
 		//trend_finder.trendOverTime("Bitcoin", 8).printPair();
