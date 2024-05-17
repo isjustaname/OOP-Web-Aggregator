@@ -1,6 +1,7 @@
 package trendPackage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -22,59 +23,27 @@ public class DataExtract {
 		this.json_file = json_file;
 	}
 	
-	
-	/**
-	 * Phân tách các nội dung trong từng subject trong JSON thành từng từ riêng
-	 * @param split_regex: kí hiệu dùng làm điểm phân tách
-	 * @param ignore_downcase: (True)Bỏ qua các từ không viết hoa
-	 */
-	public List<String> ExtractWord(String split_regex, boolean ignore_downcase, String... subjects) {
-		Iterator<?> itr = this.json_file.iterator();
-		List<String> list_of_word = new ArrayList<>();
- 		while (itr.hasNext()) 
-		{
-			JSONObject json_object = (JSONObject) itr.next();//Đọc các dữ liệu của từng web một
-			for(String sub : subjects) {
-				if(json_object.get(sub) instanceof JSONArray) {
-					JSONArray json_array = (JSONArray) json_object.get(sub);
-					Iterator<?> itr_child = json_array.iterator() ;
-					while(itr_child.hasNext()) {
-						String paragraph = (String) itr.next();
-						String[] words = paragraph.split(split_regex);
-						for(int i = 0; i<words.length; i++){
-							//Lọc các dấu thừa ra trong từ
-							words[i] = polishWord(words[i], ignore_downcase);
-						}
-						Collections.addAll(list_of_word, words);
-					}
-				}
-				else {
-					String paragraph = (String)json_object.get(sub);
-					String[] words = paragraph.split(split_regex);
-					for(int i = 0; i<words.length; i++){
-						//Lọc các dấu thừa ra trong từ
-						words[i] = polishWord(words[i], ignore_downcase);
-					}
-					Collections.addAll(list_of_word, words);
-				}
-			}
+	public PairArray extractTagTrend(){
+		List<String> every_web_tag = new ArrayList<>();
+		for(TrendData data : TagRecognition.web_tag_data){
+			every_web_tag.addAll(data.tag_list);
 		}
-		return list_of_word;
+		return heapCountingList(every_web_tag);
 	}
-
-
 	
 	/**
-	 * Liệt kê các từ xuất hiện trong dãy với các chữ xuất hiện nhiều được xếp ở trên (Chưa sắp xếp hoàn chỉnh)
-	 * @param args
-	 * @throws ParseException 
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
-	 * @throws Exception
+	 * Tìm phần trăm các homepage được cào
+	 * @return
 	 */
-	public PairArray Frequency(String split_regex ,boolean ignore_downcase, String... extract_subjects) {
-		List<String> list_of_words = ExtractWord(split_regex, ignore_downcase, extract_subjects);
-		return heapCountingList(list_of_words);
+	public PairArray mainWebListing(){
+		Iterator<?> itr = this.json_file.iterator();
+		List<String> web_list = new ArrayList<>();
+ 		while (itr.hasNext()){
+			JSONObject json_object = (JSONObject) itr.next();
+			String web_url = (String) json_object.get("web_url");
+			web_list.add(web_url);
+		}
+		return heapCountingList(web_list);
 	}
 	
 	/**
@@ -109,46 +78,25 @@ public class DataExtract {
 	 * @return
 	 */
 	public static boolean locateWord(JSONObject json_object, String locating_word) {
-		String[] subjects = {"title", "description", "tag"};
-		for(String sub : subjects) {
-			String paragraph = (String)json_object.get(sub);
-			String[] words = paragraph.split("[ ,]");
-			for(String w: words) {
-				w = polishWord(w, false);
-				if(w.contains(locating_word)) {
-					return true;
-				}
+		for(TrendData data : TagRecognition.web_tag_data) {
+			if(data.tag_list.contains(locating_word) || data.tag_list.contains(upperCaseFirst(locating_word))){
+				return true;
 			}
 		}
 		return false;
 	}
-	
-	/**
-	 * Lọc và chỉnh sửa các từ sau khi split
-	 * @param word
-	 * @param ignore_downcase: bỏ các từ viết thường không, nếu không bỏ thì viết hoa các từ đấy
-	 */
-	private static String polishWord(String word, boolean ignore_downcase) {
-		if(word.isEmpty()) return "";
-		if(ignore_downcase) { 
-			String upper_case = "[A-Z]\\w*";
-			if(word.matches(upper_case) == false) return "";
+
+	public static String upperCaseFirst(String word){
+		String[] letter_list = word.split("[ ]");
+		StringBuilder new_word = new StringBuilder();
+		for(String letter : letter_list){
+			//Đi từng chữ và viết hoa chữ đầu
+			new_word.append(letter.substring(0, 1).toUpperCase()
+			.concat(letter.substring(1)));
+			new_word.append(" ");
 		}
-		else {
-			word = word.substring(0, 1).toUpperCase() + word.substring(1); //Viết hoa chữ đầu
-		}
-		while(word.substring(0, 1).matches("[\\w]") == false){
-			word = word.substring(1);
-			if(word == "") return "";
-		}
-		int len = word.length();
-		while(word.substring(len-1, len).matches("\\w") == false) {
-			word = word.substring(0, len-1);
-			len -= 1;
-			if(word == "") return "";
-		}
-		return word;
-		
+		new_word.setLength(new_word.length()-1);
+		return new_word.toString();
 	}
-	
+
 }

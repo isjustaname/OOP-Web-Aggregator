@@ -1,16 +1,22 @@
-package trendPackage;
+
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.text.html.HTML.Tag;
 
 import org.json.simple.JSONArray; 
 import org.json.simple.parser.*;
 
 import com.google.gson.Gson;
 
-import pairPackage.PairArray; 
+import pairPackage.PairArray;
+import trendPackage.*;
+
 
 
 /**
@@ -31,6 +37,7 @@ public class TrendFinder{
 		JSONArray ja = (JSONArray) obj;  //Lấy dữ liệu từ file Json
 		this.extractor = new DataExtract(ja);
 		this.time_display = new TimeDisplay(ja);
+		TagRecognition.tagScrapping(ja);
 	}
 	
 	/**
@@ -77,7 +84,7 @@ public class TrendFinder{
 	 * @throws ParseException
 	 */
 	public PairArray extractedWeb() throws FileNotFoundException, IOException, ParseException {
-		PairArray list_of_web = this.extractor.Frequency("[,]", false, "web_url");
+		PairArray list_of_web = this.extractor.mainWebListing();
 		list_of_web.add("http://www.blockchain.new", 20); //Đây để test vì còn ít web quá
 		double total = 0;
 		for(int i = 0; i< list_of_web.size(); i++) {
@@ -109,7 +116,7 @@ public class TrendFinder{
 	 * @throws Exception
 	 */
 	public PairArray findMostTrending(int find_number) throws FileNotFoundException, IOException, ParseException {
-		PairArray trend_list = this.extractor.Frequency("[,]", false, "tag");
+		PairArray trend_list = extractor.extractTagTrend();
 		PairArray most_trend = new PairArray();
 		//cắt dãy con không cần thiết tùy vào find_number
 		//trường hợp là số lượng từ tìm bằng độ sâu của cây vung đống
@@ -128,20 +135,22 @@ public class TrendFinder{
 	
 	
 	public static void main(String[] args) throws Exception {
+		
 		TrendFinder trend_finder = new TrendFinder("Data/Output.json");
 		TrendData data_list = new TrendData();
 		
-		data_list.search_word = "Bitcoin";
-		data_list.most_trending = trend_finder.findMostTrending(8);
-		data_list.web_display = trend_finder.extractedWeb();
-		trend_finder.findMostTrending(9).printPair();
+		trend_finder.findMostTrending(14).printPair();
 		//trend_finder.trendOverTime("Bitcoin", 2).printPair();
 		//trend_finder.trendOverTime("Bitcoin", 4).printPair();
 		//trend_finder.trendOverTime("Bitcoin", 8).printPair();
-		//trend_finder.trendOverTime("Bitcoin", 15).printPair();
+		trend_finder.trendOverTime("Bitcoin", 15).printPair();
 		
-		
-		
+		//for(TrendData data : TagRecognition.web_tag_data){
+		//	System.out.println(data.tag_list + " : " + data.published_date);
+		//}
+		trend_finder.extractedWeb().printPair();
+
+
         Gson gson = new Gson();
         String jsonData = gson.toJson(data_list);
 

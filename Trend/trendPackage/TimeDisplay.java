@@ -23,13 +23,11 @@ public class TimeDisplay {
 	 * 
 	 */
 	public PairArray dateExtract(String located_word){
-		Iterator<?> itr = this.json_file.iterator();
 		PairArray date_appearance = new PairArray();
- 		while (itr.hasNext()) 
-		{
-			JSONObject json_object = (JSONObject) itr.next();//Đọc các dữ liệu của từng web một
-			if(DataExtract.locateWord(json_object, located_word) == true) {
-				String date = getTime(json_object);
+		for(TrendData data : TagRecognition.web_tag_data){
+			if(data.published_date.isEmpty() || data.published_date == "") continue;
+			if(data.tag_list.contains(located_word) == true) {
+				String date = data.published_date.substring(0, 10);
 				if(date == "") continue;
 				int index = date_appearance.indexOfProperty(date);
 				if(index == -1) {
@@ -196,17 +194,5 @@ public class TimeDisplay {
 	private static int getEndOfMonth(String date_string) {
 		LocalDate date = LocalDate.parse(date_string);
 		return date.lengthOfMonth();
-	}
-
-	/**
-	 * Lấy ra thời gian (ngày/tháng/năm) trong file json
-	 * @param json_object
-	 * @return
-	 */
-	private static String getTime(JSONObject json_object) {
-		String date = (String)json_object.get("create_date");
-		if(date.isEmpty()) return "";
-		date = date.substring(0, 10);
-		return date;
 	}
 }
