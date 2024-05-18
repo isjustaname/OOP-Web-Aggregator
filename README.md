@@ -1,7 +1,7 @@
 TrendFinder là file java chính, mỗi object của TrendFinder sẽ được gắn với 1 file json và chỉ đào dữ liệu từ file json đấy, có 3 hàm ứng với 3 phần Trend:
 (Lưu ý: Hàm sẽ trả về 1 dãy PairArray, muốn thấy giá trị trên terminal thì dùng hàm .printPair() gắn với dãy đấy)
 - 1: Sự thay đổi theo thời gian của lần xuất hiện của 1 từ:
-    + Nhập vào 1 từ cần tìm (VD: "Bitcoin") và số năm trước đây (bắt đầu từ năm nay) cần biểu diễn
+    + Nhập vào 1 từ cần tìm (VD: "Bitcoin") và số năm trước đây (bắt đầu từ năm nay) cần biểu diễn. Tùy theo số lượng năm nhiều hay ít sẽ biểu diễn thời gian theo cách khác nhau (Xem rõ các mốc thời gian ở comment trên hàm và file TimeDisplay)
     1 input, output VD:
     Input: trend_finder.trendOverTime("Bitcoin", 15)
     Output: 
