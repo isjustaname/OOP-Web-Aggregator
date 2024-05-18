@@ -17,7 +17,7 @@ public class ScrapeData{
     private String type;
     private String description;
     private String title;
-    private List<String> content;
+    private String content;
     private String create_date;
     private String tag;
     private String author;

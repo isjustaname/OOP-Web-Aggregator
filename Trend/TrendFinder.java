@@ -136,14 +136,14 @@ public class TrendFinder{
 	
 	public static void main(String[] args) throws Exception {
 		
-		TrendFinder trend_finder = new TrendFinder("Data/Output.json");
+		TrendFinder trend_finder = new TrendFinder("Data/Output copy.json");
 		TrendData data_list = new TrendData();
 		
 		trend_finder.findMostTrending(14).printPair();
 		//trend_finder.trendOverTime("Bitcoin", 2).printPair();
 		//trend_finder.trendOverTime("Bitcoin", 4).printPair();
 		//trend_finder.trendOverTime("Bitcoin", 8).printPair();
-		trend_finder.trendOverTime("Bitcoin", 15).printPair();
+		trend_finder.trendOverTime("Bitcoin", 2).printPair();
 		
 		//for(TrendData data : TagRecognition.web_tag_data){
 		//	System.out.println(data.tag_list + " : " + data.published_date);
@@ -151,13 +151,7 @@ public class TrendFinder{
 		trend_finder.extractedWeb().printPair();
 
 
-        Gson gson = new Gson();
-        String jsonData = gson.toJson(data_list);
-
-        // Để viết ra Json
-        BufferedWriter writer = new BufferedWriter(new FileWriter("Data/Trend.json"));
-        writer.write(jsonData);
-        writer.close();
+      
 		
 	}
 		

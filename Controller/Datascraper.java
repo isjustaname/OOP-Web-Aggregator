@@ -49,7 +49,7 @@ public class Datascraper {
                     contentList.add(content.text());
                 
                 // Tạo đối tượng ScrapedData và đẩy vào dataList 
-                ScrapeData data = new ScrapeData(url, web_url, type.attr("content"), description.attr("content"), title,  contentList, create_date.attr("content"), tag.attr("content"), author.attr("content"));
+                ScrapeData data = new ScrapeData(url, web_url, type.attr("content"), description.attr("content"), title,  contents.attr("content"), create_date.attr("content"), tag.attr("content"), author.attr("content"));
                 dataList.add(data);
             }
             
