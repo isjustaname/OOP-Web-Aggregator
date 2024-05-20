@@ -24,6 +24,7 @@ public class TimeDisplay {
 	 */
 	public PairArray dateExtract(String located_word){
 		PairArray date_appearance = new PairArray();
+		int counter = 0;
 		for(TrendData data : TagRecognition.web_tag_data){
 			if(data.published_date.isEmpty() || data.published_date == "") continue;
 			if(data.tag_list.contains(located_word) == true) {
@@ -102,7 +103,7 @@ public class TimeDisplay {
 	}
 	
 	/**
-	 * Gộp các thời gian theo từng 3 tháng
+	 * Gộp các thời gian theo từng 4 tháng
 	 * @param date_list
 	 * @return
 	 */
@@ -125,6 +126,33 @@ public class TimeDisplay {
 			}
 		}
 		return a_third_year;
+	}
+
+	/**
+	 * Gộp các thời gian theo nửa năm
+	 * @param date_list
+	 * @return
+	 */
+	public static PairArray halfYearGroup(PairArray date_list, int year_span) {
+		PairArray half_year = new PairArray();
+		LocalDate current_date = LocalDate.now();
+		LocalDate last_date = current_date.minusYears(year_span);
+		if(getHalfYear(last_date).substring(5,7).compareTo("07") >= 0)
+			last_date = last_date.minusMonths(6);
+		while(current_date.compareTo(last_date) >= 0) {
+			half_year.add(getHalfYear(current_date), 0);
+			current_date = current_date.minusMonths(6);
+		}
+		String last_year = String.valueOf(last_date.getYear());
+		half_year.add("<".concat(last_year), 0);
+		for(Pair date: date_list) {
+			String date_string = getHalfYear(LocalDate.parse(date.getProperty()));
+			if(date_string.substring(0, 4).compareTo(last_year) < 0)
+				date_string = "<".concat(last_year);
+			int index = half_year.indexOfProperty(date_string);
+			half_year.setValue(index, half_year.getValue(index) + date.getValue());
+		}
+		return half_year;
 	}
 
 	/**
@@ -182,6 +210,20 @@ public class TimeDisplay {
 		if(month <= 4) month_range = "01_04";
 		else if(month <=8) month_range = "05_08";
 		else month_range = "09_12";
+		month_range = date.toString().substring(0, 5).concat(month_range);
+		return month_range;
+	}
+
+	/**
+	 * Tìm khoảng nửa năm (0-6; 7-12);
+	 * @param date_string
+	 * @return
+	 */
+	private static String getHalfYear(LocalDate date){
+		String month_range;
+		int month = date.getMonthValue();
+		if(month <= 6) month_range = "01_06";
+		else month_range = "07_12";
 		month_range = date.toString().substring(0, 5).concat(month_range);
 		return month_range;
 	}

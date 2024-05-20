@@ -38,7 +38,8 @@ public class JsonRead {
             String type = (String) json_object.get("type");
             String description = (String) json_object.get("description");
             String title = (String) json_object.get("title");
-            String content = contentCombiner((JSONArray) json_object.get("content"));
+//            String content = contentCombiner((JSONArray) json_object.get("content"));
+            String content = (String) json_object.get("content");
             String create_date = (String) json_object.get("create_date");
             String tag = (String) json_object.get("tag");
             String author = (String) json_object.get("author");

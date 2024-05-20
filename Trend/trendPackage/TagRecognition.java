@@ -20,11 +20,12 @@ import org.json.simple.JSONObject;
 public class TagRecognition {
     public static List<TrendData> web_tag_data = new ArrayList<>();
     private static Set<String> tag_base = new HashSet<>();
-    private static Set<String> full_tag = new HashSet<>();
+    public static Set<String> full_tag = new HashSet<>();
     
     
 	static{
-        String[] base = {"crypto", "currency", "centraliz", "mining", "block", "token", "immutable", "atomic", "permission", "regulat", "hash", "market"};
+        String[] base = {"crypto", "currency", "centraliz", "mining", "block", "token", "inance", 
+        "immutable", "atomic", "permission", "regulat", "hash", "market", "coin"};
 
         String[] full = {"blockchain", "ethereum", "cryptocurrency", "ledger", "smart contract", "consensus",
             "immutable", "transparency", "trustless", "nodes", "mining", "hash", "merkle tree",
@@ -37,8 +38,8 @@ public class TagRecognition {
             "address", "block explorer", "block header", "genesis block", "cross-border transactions", "smart property",
             "immutable storage", "gas limit", "gas price", "plasma cash", "rollups", "state channels",
             "atomicity", "interoperable", "decentralized identifier", "off-chain", "on-chain",
-            "network congestion", "smart oracle", "token curated registry", "cryptoeconomics", "tokenomics", "hard cap", "soft cap",
-            "whitepaper", "roadmap", "crowdsale", "square", "cash app"};
+            "network congestion", "smart oracle", "token curated registry", "cryptoeconomics", "tokenomics", "hard cap", 
+            "soft cap", "whitepaper", "roadmap", "crowdsale", "square", "cash app"};
 
         Collections.addAll(tag_base, base);
         Collections.addAll(full_tag, full);
@@ -114,6 +115,8 @@ public class TagRecognition {
         for(String key_word : tag_base){
             if(word.contains(key_word)){
 //                System.out.println(word + " : " +  key_word + " accept");
+//                full_tag.add(word);
+                if(word == "cryptorunner") System.out.println("OK");
                 return true;
             }
         }
@@ -127,8 +130,8 @@ public class TagRecognition {
 	 */
 	private static String polishWord(String word) {
 		if(word.isEmpty()) return "";
-        word = word.replaceAll("^[?'’,._ \\-\"]+", ""); //Lọc dấu đằng trước
-        word = word.replaceAll("[?'’,._\\-\"]+.*", ""); //Lọc dấu đằng sau
+        word = word.replaceAll("^[?'’,._:)(!# \\-\"]+", ""); //Lọc dấu đằng trước
+        word = word.replaceAll("[?'’,._:)(!#\\-\"]+.*", ""); //Lọc dấu đằng sau
         word = word.replaceAll("[ ]$", ""); //Nhỡ có dấu cách đằng cuối
 		return word;
 		

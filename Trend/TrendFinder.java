@@ -52,20 +52,21 @@ public class TrendFinder{
 	 */
 	public PairArray trendOverTime(String locate_word, int year_span) {
 		PairArray date_list = this.time_display.dateExtract(locate_word);
-		switch (year_span/3) {
-			case 0:
-				date_list = TimeDisplay.halfMonthGroup(date_list, year_span);
-				break;
-			case 1: 
-				date_list = TimeDisplay.monthGroup(date_list, year_span);
-				break;
-			case 2:
-				date_list = TimeDisplay.aThirdOfYearGroup(date_list, year_span);
-				break;
-			default:
-				date_list = TimeDisplay.yearGroup(date_list, year_span);
-				break;
-		}
+		date_list = TimeDisplay.halfYearGroup(date_list, year_span);
+		// switch (year_span/3) {
+		// 	case 0:
+		// 		date_list = TimeDisplay.halfMonthGroup(date_list, year_span);
+		// 		break;
+		// 	case 1: 
+		// 		date_list = TimeDisplay.monthGroup(date_list, year_span);
+		// 		break;
+		// 	case 2:
+		// 		date_list = TimeDisplay.aThirdOfYearGroup(date_list, year_span);
+		// 		break;
+		// 	default:
+		// 		date_list = TimeDisplay.yearGroup(date_list, year_span);
+		// 		break;
+		// }
 		for(int i = 0; i<date_list.size(); i++){
 			//Chỉnh lại format từ năm-tháng-ngày sang năm/tháng/ngày
 			String new_date =  date_list.getProperty(i).replace('-', '/');
@@ -85,7 +86,7 @@ public class TrendFinder{
 	 */
 	public PairArray extractedWeb() throws FileNotFoundException, IOException, ParseException {
 		PairArray list_of_web = this.extractor.mainWebListing();
-		list_of_web.add("http://www.blockchain.new", 20); //Đây để test vì còn ít web quá
+		list_of_web.sortValue();
 		double total = 0;
 		for(int i = 0; i< list_of_web.size(); i++) {
 			//lấy tổng số lượng web
@@ -94,7 +95,7 @@ public class TrendFinder{
 		PairArray web_precent_list = new PairArray();
 		for(int i = 0; i<list_of_web.size(); i++) {
 			//chia dần ra lấy phần trăm
-			double precent_value = (double)list_of_web.getValue(i) / total * 100;
+			double precent_value = list_of_web.getValue(i) / total * 100;
 			precent_value = Math.round(precent_value*100) / 100.0;
 			web_precent_list.add(list_of_web.getProperty(i), precent_value);
 		}
@@ -136,19 +137,18 @@ public class TrendFinder{
 	
 	public static void main(String[] args) throws Exception {
 		
-		TrendFinder trend_finder = new TrendFinder("Data/Output copy.json");
+		TrendFinder trend_finder = new TrendFinder("Data/Output.json");
 		TrendData data_list = new TrendData();
 		
 		trend_finder.findMostTrending(14).printPair();
 		//trend_finder.trendOverTime("Bitcoin", 2).printPair();
 		//trend_finder.trendOverTime("Bitcoin", 4).printPair();
 		//trend_finder.trendOverTime("Bitcoin", 8).printPair();
-		trend_finder.trendOverTime("Bitcoin", 2).printPair();
-		
-		//for(TrendData data : TagRecognition.web_tag_data){
-		//	System.out.println(data.tag_list + " : " + data.published_date);
-		//}
-		trend_finder.extractedWeb().printPair();
+//		trend_finder.trendOverTime("Bitcoin", 4).printPair();
+//		trend_finder.extractedWeb().printPair();
+		// for(TrendData data : TagRecognition.web_tag_data){
+		// 	System.out.println(data.tag_list + " : " + data.published_date);
+		// }
 
 
       
