@@ -8,11 +8,8 @@ import org.json.simple.parser.*;
 
 import pairPackage.PairArray;
 import trendPackage.*;
-import trendPackage.timeDisplayer.AThirdOfYear;
-import trendPackage.timeDisplayer.HalfMonth;
-import trendPackage.timeDisplayer.HalfYear;
-import trendPackage.timeDisplayer.MonthGroup;
-import trendPackage.timeDisplayer.TimeDisplay;
+
+import trendPackage.timeDisplayer.*;
 
 
 
@@ -49,20 +46,18 @@ public class TrendFinder{
 	 */
 	public PairArray trendOverTime(String locate_word, int year_span) {
 		PairArray date_list = this.extractor.dateExtract(locate_word);
-		time_displayer = new HalfYear(date_list);
-		//date_list = time_displayer.timeRangeGrouping(year_span);
 		switch (year_span/3) {
 			case 0:
-				time_displayer = new HalfMonth(date_list);
+				time_displayer = new HalfMonthRange(date_list);
 				break;
 			case 1: 
-				time_displayer = new MonthGroup(date_list);
+				time_displayer = new MonthRange(date_list);
 				break;
 			case 2:
-				time_displayer = new AThirdOfYear(date_list);
+				time_displayer = new AThirdOfYearRange(date_list);
 				break;
 			default:
-				time_displayer = new HalfYear(date_list);
+				time_displayer = new HalfYearRange(date_list);
 				break;
 		}
 		date_list = time_displayer.timeRangeGrouping(year_span);
