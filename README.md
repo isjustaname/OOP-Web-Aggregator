@@ -1,4 +1,4 @@
-Folder Trend là toàn bộ phần t ( còn 2 cái class Pair, PairArray ở Config )
+Folder Trend là toàn bộ phần t
 
 TrendFinder là file java chính, mỗi object của TrendFinder sẽ được gắn với 1 file json và chỉ đào dữ liệu từ file json đấy, có 3 hàm ứng với 3 phần Trend:
 (Lưu ý: Hàm sẽ trả về 1 dãy PairArray, muốn thấy giá trị trên terminal thì dùng hàm .printPair() gắn với dãy đấy)
