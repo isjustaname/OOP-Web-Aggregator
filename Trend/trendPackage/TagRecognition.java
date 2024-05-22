@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.print.DocFlavor.STRING;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -20,7 +18,7 @@ import org.json.simple.JSONObject;
 public class TagRecognition {
     public static List<TrendData> web_tag_data = new ArrayList<>();
     private static Set<String> tag_base = new HashSet<>();
-    public static Set<String> full_tag = new HashSet<>();
+    private static Set<String> full_tag = new HashSet<>();
     
     
 	static{
@@ -44,19 +42,23 @@ public class TagRecognition {
         Collections.addAll(tag_base, base);
         Collections.addAll(full_tag, full);
 	} 
+    public TagRecognition(JSONArray json_file){
+        tagScrapping(json_file);
+    }
 
     /**
      * Tìm và liệt kê các thông tin cần thiết (tag và create_date) vào web_tag_data
      */
-    public static void tagScrapping(JSONArray json_file){
+    public void tagScrapping(JSONArray json_file){
         Iterator<?> itr = json_file.iterator();
  		while (itr.hasNext()) 
 		{
             TrendData trend_data = new TrendData();
 			JSONObject json_object = (JSONObject) itr.next();//Đọc các dữ liệu của từng web một
-            String tag = (String) json_object.get("tag");
-            if(tag.isEmpty() == false && tag != ""){
-                trend_data.tag_list.addAll(extractWord(tag, "[,]"));
+            String tags = (String) json_object.get("tag");
+            if(tags.isEmpty() == false && tags != ""){
+                List<String> tag_list = extractWord(tags, "[,]");
+                trend_data.tag_list.addAll(filterKeyWord(tag_list));
             }
             Set<String> list_of_tag = new HashSet<>();
             //Web không có tag, phải lọc từ phần title và descripsion
@@ -80,9 +82,8 @@ public class TagRecognition {
                 }
             }
             trend_data.tag_list.addAll(list_of_tag);
-//            System.out.println("new tag:" + list_of_tag + " in "  + paragraph.toString());
+
             trend_data.published_date = (String) json_object.get("create_date");
-            trend_data.filterKeyWord();
             web_tag_data.add(trend_data);
         }
     }
@@ -91,7 +92,7 @@ public class TagRecognition {
 	 * Phân tách các nội dung trong một dãy
 	 * @param split_regex: kí hiệu dùng làm điểm phân tách
 	 */
-	private static List<String> extractWord(String paragraph,String split_regex) {
+	private List<String> extractWord(String paragraph,String split_regex) {
 		List<String> list_of_word = new ArrayList<>();
         String[] words = paragraph.split(split_regex);
         for(int i = 0; i<words.length; i++){
@@ -101,13 +102,23 @@ public class TagRecognition {
         Collections.addAll(list_of_word, words);
 		return list_of_word;
 	}
+
+    private List<String> filterKeyWord(List<String> list){
+        List<String> copy_list = new ArrayList<>(list);
+        for(String word : copy_list){
+            if(isBlockchainKeyword(word) == false){
+                list.remove(word);
+            }
+        }
+        return list;
+    }
     
     /**
      * Kiểm tra xem từ được cho có phải là từ khóa (Liên quan đến blockchain ) hay không
      * @param word
      * @return
      */
-    public static boolean isBlockchainKeyword(String word){
+    public boolean isBlockchainKeyword(String word){
         if(word.matches("\\w*[A-Z]\\w*[A-Z]\\w*")){
             return true;
         }
@@ -128,7 +139,7 @@ public class TagRecognition {
 	 * Lọc và chỉnh sửa các từ 
 	 * @param word
 	 */
-	private static String polishWord(String word) {
+	private String polishWord(String word) {
 		if(word.isEmpty()) return "";
         word = word.replaceAll("^[?'’,._:)(!# \\-\"]+", ""); //Lọc dấu đằng trước
         word = word.replaceAll("[?'’,._:)(!#\\-\"]+.*", ""); //Lọc dấu đằng sau

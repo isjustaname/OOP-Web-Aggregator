@@ -1,7 +1,5 @@
 package trendPackage;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.Buffer;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -9,7 +7,6 @@ import java.util.List;
 
 import org.json.simple.JSONArray; 
 import org.json.simple.JSONObject; 
-import org.json.simple.parser.*;
 
 import pairPackage.PairArray; 
 
@@ -23,6 +20,33 @@ public class DataExtract {
 		this.json_file = json_file;
 	}
 	
+	/**
+	 * Tìm list các năm/tháng/ngày 
+	 * @param located word: từ đang được tìm kiếm
+	 * @return
+	 * 
+	 */
+	public PairArray dateExtract(String located_word){
+		PairArray date_appearance = new PairArray();
+		for(TrendData data : TagRecognition.web_tag_data){
+			if(data.published_date.isEmpty() || data.published_date == "") continue;
+			if(data.published_date.contains("/")) continue;
+			if(data.tag_list.contains(located_word) == true) {
+				String date = data.published_date.substring(0, 10);
+				if(date == "") continue;
+				int index = date_appearance.indexOfProperty(date);
+				if(index == -1) {
+					date_appearance.add(date, 1);
+				}
+				else {
+					date_appearance.setValue(index, date_appearance.getValue(index) + 1);
+				}
+			}
+		}
+ 		date_appearance.sortProperty();
+		return date_appearance;
+	}
+
 	public PairArray extractTagTrend(){
 		List<String> every_web_tag = new ArrayList<>();
 		for(TrendData data : TagRecognition.web_tag_data){
@@ -70,22 +94,12 @@ public class DataExtract {
 		}
 		return word_appearance;
 	}
-	
+
 	/**
-	 * Tìm xem trong web có xuất hiện ( nói đến ) từ cần tìm không
-	 * @param json_object
-	 * @param locating_word
+	 * Viết hoa các từ đầu chữ
+	 * @param word
 	 * @return
 	 */
-	public static boolean locateWord(JSONObject json_object, String locating_word) {
-		for(TrendData data : TagRecognition.web_tag_data) {
-			if(data.tag_list.contains(locating_word) || data.tag_list.contains(upperCaseFirst(locating_word))){
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public static String upperCaseFirst(String word){
 		String[] letter_list = word.split("[ ]");
 		StringBuilder new_word = new StringBuilder();

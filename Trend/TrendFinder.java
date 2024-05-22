@@ -1,21 +1,18 @@
 
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.text.html.HTML.Tag;
 
 import org.json.simple.JSONArray; 
 import org.json.simple.parser.*;
 
-import com.google.gson.Gson;
-
 import pairPackage.PairArray;
 import trendPackage.*;
+import trendPackage.timeDisplayer.AThirdOfYear;
+import trendPackage.timeDisplayer.HalfMonth;
+import trendPackage.timeDisplayer.HalfYear;
+import trendPackage.timeDisplayer.MonthGroup;
+import trendPackage.timeDisplayer.TimeDisplay;
 
 
 
@@ -28,16 +25,16 @@ import trendPackage.*;
 public class TrendFinder{
 	private String output_file;
 	private DataExtract extractor;
-	private TimeDisplay time_display;
+	private TimeDisplay time_displayer;
+	private TagRecognition tag_scraper;
 	
 	public TrendFinder(String output_file) throws FileNotFoundException, IOException, ParseException {
 		//Khởi tạo
 		this.output_file = output_file;
-		Object obj = new JSONParser().parse(new FileReader(this.output_file));
-		JSONArray ja = (JSONArray) obj;  //Lấy dữ liệu từ file Json
-		this.extractor = new DataExtract(ja);
-		this.time_display = new TimeDisplay(ja);
-		TagRecognition.tagScrapping(ja);
+		Object object = new JSONParser().parse(new FileReader(this.output_file));
+		JSONArray json_array = (JSONArray) object;  //Lấy dữ liệu từ file Json
+		this.extractor = new DataExtract(json_array);
+		this.tag_scraper = new TagRecognition(json_array);
 	}
 	
 	/**
@@ -51,22 +48,24 @@ public class TrendFinder{
 	 * @return
 	 */
 	public PairArray trendOverTime(String locate_word, int year_span) {
-		PairArray date_list = this.time_display.dateExtract(locate_word);
-		date_list = TimeDisplay.halfYearGroup(date_list, year_span);
-		// switch (year_span/3) {
-		// 	case 0:
-		// 		date_list = TimeDisplay.halfMonthGroup(date_list, year_span);
-		// 		break;
-		// 	case 1: 
-		// 		date_list = TimeDisplay.monthGroup(date_list, year_span);
-		// 		break;
-		// 	case 2:
-		// 		date_list = TimeDisplay.aThirdOfYearGroup(date_list, year_span);
-		// 		break;
-		// 	default:
-		// 		date_list = TimeDisplay.yearGroup(date_list, year_span);
-		// 		break;
-		// }
+		PairArray date_list = this.extractor.dateExtract(locate_word);
+		time_displayer = new HalfYear(date_list);
+		//date_list = time_displayer.timeRangeGrouping(year_span);
+		switch (year_span/3) {
+			case 0:
+				time_displayer = new HalfMonth(date_list);
+				break;
+			case 1: 
+				time_displayer = new MonthGroup(date_list);
+				break;
+			case 2:
+				time_displayer = new AThirdOfYear(date_list);
+				break;
+			default:
+				time_displayer = new HalfYear(date_list);
+				break;
+		}
+		date_list = time_displayer.timeRangeGrouping(year_span);
 		for(int i = 0; i<date_list.size(); i++){
 			//Chỉnh lại format từ năm-tháng-ngày sang năm/tháng/ngày
 			String new_date =  date_list.getProperty(i).replace('-', '/');
@@ -138,14 +137,10 @@ public class TrendFinder{
 	public static void main(String[] args) throws Exception {
 		
 		TrendFinder trend_finder = new TrendFinder("Data/Output.json");
-		TrendData data_list = new TrendData();
-		
+				
 		trend_finder.findMostTrending(14).printPair();
-		//trend_finder.trendOverTime("Bitcoin", 2).printPair();
-		//trend_finder.trendOverTime("Bitcoin", 4).printPair();
-		//trend_finder.trendOverTime("Bitcoin", 8).printPair();
-//		trend_finder.trendOverTime("Bitcoin", 4).printPair();
-//		trend_finder.extractedWeb().printPair();
+		trend_finder.trendOverTime("Ethereum", 7).printPair();
+		//trend_finder.extractedWeb().printPair();
 		// for(TrendData data : TagRecognition.web_tag_data){
 		// 	System.out.println(data.tag_list + " : " + data.published_date);
 		// }

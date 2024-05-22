@@ -1,6 +1,9 @@
 package pairPackage;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import pairPackage.pairComparator.CompareProperty;
+import pairPackage.pairComparator.CompareValue;
 /** 
 *1 dãy các cặp Pair thêm một số hàm hơi khác với List
 *@param first là dãy thứ 1

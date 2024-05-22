@@ -1,6 +1,8 @@
-package pairPackage;
+package pairPackage.pairComparator;
 
 import java.util.Comparator;
+
+import pairPackage.Pair;
 
 public class CompareProperty implements Comparator<Pair> {
 
