@@ -9,52 +9,52 @@ import pairPackage.PairArray;
  * Liệt kê thời gian theo 4 tháng (1/3 năm)
  */
 public class AThirdOfYearRange implements TimeDisplay{
-    public PairArray date_list; 
+    public PairArray dateList; 
 
-    public AThirdOfYearRange(PairArray date_list){
-		this.date_list = new PairArray();
-		this.date_list.addAll(date_list);
+    public AThirdOfYearRange(PairArray dateList){
+		this.dateList = new PairArray();
+		this.dateList.addAll(dateList);
 	}
 
     @Override
-    public PairArray timeRangeGrouping(int year_span) {
-        PairArray new_date_list = new PairArray();
-		LocalDate current_date = LocalDate.now();
-		LocalDate last_date = current_date.minusYears(year_span);
-        last_date = last_date.minusMonths(last_date.getMonthValue());
+    public PairArray timeRangeGrouping(int yearSpan) {
+        PairArray newDateList = new PairArray();
+		LocalDate currentDate = LocalDate.now();
+		LocalDate lastDate = currentDate.minusYears(yearSpan);
+        lastDate = lastDate.minusMonths(lastDate.getMonthValue());
         
-		while(current_date.compareTo(last_date) >= 0) {
-			new_date_list.add(getTimeRange(current_date), 0);
-			current_date = current_date.minusMonths(4);
+		while(currentDate.compareTo(lastDate) >= 0) {
+			newDateList.add(getTimeRange(currentDate), 0);
+			currentDate = currentDate.minusMonths(4);
 		}
 
-        String others_date = last_date.toString().substring(0, 4);
-        others_date = "<".concat(others_date);
-        new_date_list.add(others_date, 0);
+        String othersDate = lastDate.toString().substring(0, 4);
+        othersDate = "<".concat(othersDate);
+        newDateList.add(othersDate, 0);
         
-		for(Pair date: date_list) {
-			String date_string = date.getProperty();
-            if(LocalDate.parse(date_string).compareTo(last_date) <= 0){
-                date_string = others_date;
+		for(Pair date: dateList) {
+			String dateString = date.getProperty();
+            if(LocalDate.parse(dateString).compareTo(lastDate) <= 0){
+                dateString = othersDate;
             }
             else{
-			    date_string = getTimeRange(LocalDate.parse(date_string));
+			    dateString = getTimeRange(LocalDate.parse(dateString));
             }
-			int index = new_date_list.indexOfProperty(date_string);
-			new_date_list.setValue(index, new_date_list.getValue(index) + date.getValue());
+			int index = newDateList.indexOfProperty(dateString);
+			newDateList.setValue(index, newDateList.getValue(index) + date.getValue());
 		}
-		return new_date_list;
+		return newDateList;
     }
 
     @Override
     public String getTimeRange(LocalDate date) {
-        String month_range;
+        String monthRange;
 		int month = date.getMonthValue();
-		if(month <= 4) month_range = "01_04";
-		else if(month <=8) month_range = "05_08";
-		else month_range = "09_12";
-		month_range = date.toString().substring(0, 5).concat(month_range);
-		return month_range;
+		if(month <= 4) monthRange = "01_04";
+		else if(month <=8) monthRange = "05_08";
+		else monthRange = "09_12";
+		monthRange = date.toString().substring(0, 5).concat(monthRange);
+		return monthRange;
     }
 
 }

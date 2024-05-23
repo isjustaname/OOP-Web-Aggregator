@@ -12,14 +12,14 @@ import java.util.Set;
 import java.util.Stack;
 
 public class LinkFind {
-	public String the_link;
-	public LinkFind(String the_link) {
-		this.the_link = the_link;
+	public String theLink;
+	public LinkFind(String theLink) {
+		this.theLink = theLink;
 	}
     public static void main(String[] args) {
     	LinkFind link_finder = new LinkFind("https://www.coindesk.com");
     	
-        String homepageURL = link_finder.the_link; // Website mục tiêu (Sau sẽ đổi sang input dạng .txt)
+        String homepageURL = link_finder.theLink; // Website mục tiêu (Sau sẽ đổi sang input dạng .txt)
         String outputFile = "Data/Url.txt"; // Tên file xuất ra
 
         try {
@@ -51,7 +51,7 @@ public class LinkFind {
                 visited.add(currentURL);
 
                 // Giới hạn route của Url (<<<<<<<<<<<< Mày sửa chỗ này >>>>>>>>>>>>>>)
-                if (currentURL.equals(this.the_link) || (currentURL.startsWith(this.the_link) && currentURL.length() >= 60)) { 
+                if (currentURL.equals(this.theLink) || (currentURL.startsWith(this.theLink) && currentURL.length() >= 60)) { 
                 	if (currentURL!=homepageURL){
                         URLs.add(currentURL); // Add the URL to the set of blockchain URLs
                     }

@@ -30,7 +30,7 @@ public class JsonRead {
 		Object obj = new JSONParser().parse(new FileReader(output_file));
 		JSONArray ja = (JSONArray) obj;  //Lấy dữ liệu từ file Json
         Iterator<?> itr = ja.iterator();
-		List<ScrapeData> data_list = new ArrayList<>();
+		List<ScrapeData> dataList = new ArrayList<>();
  		while (itr.hasNext()){
             JSONObject json_object = (JSONObject) itr.next();
             String url = (String) json_object.get("url");
@@ -54,9 +54,9 @@ public class JsonRead {
             content = content.replace("'", "’").replace("&", "and");
 
             ScrapeData data = new ScrapeData(url, web_url, type, description, title, content, create_date, tag, author);
-            data_list.add(data);
+            dataList.add(data);
 		}
-        return data_list;
+        return dataList;
     }
     
     private static String contentCombiner(JSONArray content_json){
@@ -76,16 +76,16 @@ public class JsonRead {
 
     public static void main(String[] args) throws FileNotFoundException, IOException, ParseException {
         Gson gson = new Gson();
-        List<ScrapeData> data_list = readJson("Data/Output copy.json");
+        List<ScrapeData> dataList = readJson("Data/Output copy.json");
 
         // Viết Json theo từng dòng 1 mà vẫn giữ dạng JSONArray
         BufferedWriter writer = new BufferedWriter(new FileWriter("Data/Output.json"));
         writer.write("[");
-        for(ScrapeData data : data_list){
+        for(ScrapeData data : dataList){
             String json_data = gson.toJson(data);
             writer.write(json_data);
             writer.newLine();
-            if(data_list.getLast() != data) writer.write(",");
+            if(dataList.getLast() != data) writer.write(",");
         }
         writer.write("]");
         writer.close();

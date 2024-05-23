@@ -10,46 +10,46 @@ import pairPackage.PairArray;
  * Liệt kê thời gian theo nửa năm
  */
 public class HalfYearRange implements TimeDisplay{
-    public PairArray date_list; 
+    public PairArray dateList; 
 
-    public HalfYearRange(PairArray date_list){
-		this.date_list = new PairArray();
-		this.date_list.addAll(date_list);
+    public HalfYearRange(PairArray dateList){
+		this.dateList = new PairArray();
+		this.dateList.addAll(dateList);
 	}
 
     @Override
-    public PairArray timeRangeGrouping(int year_span) {
-        PairArray new_date_list = new PairArray();
-		LocalDate current_date = LocalDate.now();
-		LocalDate last_date = current_date.minusYears(year_span);
-		last_date = last_date.minusMonths(last_date.getMonthValue());
+    public PairArray timeRangeGrouping(int yearSpan) {
+        PairArray newDateList = new PairArray();
+		LocalDate currentDate = LocalDate.now();
+		LocalDate lastDate = currentDate.minusYears(yearSpan);
+		lastDate = lastDate.minusMonths(lastDate.getMonthValue());
 
-		while(current_date.compareTo(last_date) >= 0) {
-			new_date_list.add(getTimeRange(current_date), 0);
-			current_date = current_date.minusMonths(6);
+		while(currentDate.compareTo(lastDate) >= 0) {
+			newDateList.add(getTimeRange(currentDate), 0);
+			currentDate = currentDate.minusMonths(6);
 		}
 
-		String others_date = String.valueOf(last_date.getYear());
-		new_date_list.add("<".concat(others_date), 0); //Để biểu diễn các năm nằm ngoài year_span
+		String othersDate = String.valueOf(lastDate.getYear());
+		newDateList.add("<".concat(othersDate), 0); //Để biểu diễn các năm nằm ngoài yearSpan
 
-		for(Pair date: this.date_list) {
-			String date_string = getTimeRange(LocalDate.parse(date.getProperty()));
-			if(date_string.substring(0, 4).compareTo(others_date) < 0)
-				date_string = "<".concat(others_date);
-			int index = new_date_list.indexOfProperty(date_string);
-			new_date_list.setValue(index, new_date_list.getValue(index) + date.getValue());
+		for(Pair date: this.dateList) {
+			String dateString = getTimeRange(LocalDate.parse(date.getProperty()));
+			if(dateString.substring(0, 4).compareTo(othersDate) < 0)
+				dateString = "<".concat(othersDate);
+			int index = newDateList.indexOfProperty(dateString);
+			newDateList.setValue(index, newDateList.getValue(index) + date.getValue());
 		}
-		return new_date_list;
+		return newDateList;
     }
 
     @Override
     public String getTimeRange(LocalDate date) {
-        String month_range;
+        String monthRange;
 		int month = date.getMonthValue();
-		if(month <= 6) month_range = "01_06";
-		else month_range = "07_12";
-		month_range = date.toString().substring(0, 5).concat(month_range);
-		return month_range;
+		if(month <= 6) monthRange = "01_06";
+		else monthRange = "07_12";
+		monthRange = date.toString().substring(0, 5).concat(monthRange);
+		return monthRange;
     }
 
 }

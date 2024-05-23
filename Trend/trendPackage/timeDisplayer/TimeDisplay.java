@@ -8,10 +8,10 @@ public interface TimeDisplay {
 
     /**
      * Nhóm thời gian theo 1 cấu tạo cố định
-     * @param year_span
+     * @param yearSpan
      * @return
      */
-    public PairArray timeRangeGrouping(int year_span);
+    public PairArray timeRangeGrouping(int yearSpan);
 
     /**
      * Tìm nhóm thời gian của 1 thời điểm nhất định

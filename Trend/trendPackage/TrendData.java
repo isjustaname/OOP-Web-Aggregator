@@ -5,6 +5,6 @@ import java.util.Set;
 
 
 public class TrendData {
-	public Set<String> tag_list = new HashSet<>();
-	public String published_date;
+	public Set<String> tagList = new HashSet<>();
+	public String publishedDate;
 }

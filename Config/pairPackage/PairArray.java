@@ -65,11 +65,11 @@ public class PairArray extends ArrayList<Pair>{
 	}
 	
 	public PairArray subList(int begin, int end) {
-		PairArray new_list = new PairArray();
+		PairArray newList = new PairArray();
 		for(int i = begin; i<end; i++) {
-			new_list.add(this.get(i));
+			newList.add(this.get(i));
 		}
-		return new_list;
+		return newList;
 	}
 	
 	public void printPair() {

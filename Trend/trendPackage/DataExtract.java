@@ -14,10 +14,10 @@ import pairPackage.PairArray;
  * Dùng để sử lí, lọc các dữ liệu của dữ liệu JSON gắn với object
  */
 public class DataExtract {
-	private JSONArray json_file;
+	private JSONArray jsonFile;
 	
-	public DataExtract(JSONArray json_file){
-		this.json_file = json_file;
+	public DataExtract(JSONArray jsonFile){
+		this.jsonFile = jsonFile;
 	}
 	
 	/**
@@ -26,33 +26,33 @@ public class DataExtract {
 	 * @return
 	 * 
 	 */
-	public PairArray dateExtract(String located_word){
-		PairArray date_appearance = new PairArray();
-		for(TrendData data : TagRecognition.web_tag_data){
-			if(data.published_date.isEmpty() || data.published_date == "") continue;
-			if(data.published_date.contains("/")) continue;
-			if(data.tag_list.contains(located_word) == true) {
-				String date = data.published_date.substring(0, 10);
+	public PairArray dateExtract(String locatedWord){
+		PairArray dateAppearance = new PairArray();
+		for(TrendData data : TagRecognition.webTagData){
+			if(data.publishedDate.isEmpty() || data.publishedDate == "") continue;
+			if(data.publishedDate.contains("/")) continue;
+			if(data.tagList.contains(locatedWord) == true) {
+				String date = data.publishedDate.substring(0, 10);
 				if(date == "") continue;
-				int index = date_appearance.indexOfProperty(date);
+				int index = dateAppearance.indexOfProperty(date);
 				if(index == -1) {
-					date_appearance.add(date, 1);
+					dateAppearance.add(date, 1);
 				}
 				else {
-					date_appearance.setValue(index, date_appearance.getValue(index) + 1);
+					dateAppearance.setValue(index, dateAppearance.getValue(index) + 1);
 				}
 			}
 		}
- 		date_appearance.sortProperty();
-		return date_appearance;
+ 		dateAppearance.sortProperty();
+		return dateAppearance;
 	}
 
 	public PairArray extractTagTrend(){
-		List<String> every_web_tag = new ArrayList<>();
-		for(TrendData data : TagRecognition.web_tag_data){
-			every_web_tag.addAll(data.tag_list);
+		List<String> everyWebTag = new ArrayList<>();
+		for(TrendData data : TagRecognition.webTagData){
+			everyWebTag.addAll(data.tagList);
 		}
-		return heapCountingList(every_web_tag);
+		return heapCountingList(everyWebTag);
 	}
 	
 	/**
@@ -60,14 +60,14 @@ public class DataExtract {
 	 * @return
 	 */
 	public PairArray mainWebListing(){
-		Iterator<?> itr = this.json_file.iterator();
-		List<String> web_list = new ArrayList<>();
+		Iterator<?> itr = this.jsonFile.iterator();
+		List<String> webList = new ArrayList<>();
  		while (itr.hasNext()){
-			JSONObject json_object = (JSONObject) itr.next();
-			String web_url = (String) json_object.get("web_url");
-			web_list.add(web_url);
+			JSONObject jsonObject = (JSONObject) itr.next();
+			String webUrl = (String) jsonObject.get("webUrl");
+			webList.add(webUrl);
 		}
-		return heapCountingList(web_list);
+		return heapCountingList(webList);
 	}
 	
 	/**
@@ -76,23 +76,23 @@ public class DataExtract {
 	 * @return
 	 */
 	private PairArray heapCountingList(List<String> list){
-		PairArray word_appearance = new PairArray();
+		PairArray wordAppearance = new PairArray();
 		for (String word : list){
 			if(word == "") continue; // Lọc cái dấu cách còn sót
-			int index = word_appearance.indexOfProperty(word);
+			int index = wordAppearance.indexOfProperty(word);
 			if(index == -1) {
-				word_appearance.add(word, 1);
+				wordAppearance.add(word, 1);
 			}
 			else {
-				word_appearance.setValue(index, word_appearance.getValue(index) + 1);
+				wordAppearance.setValue(index, wordAppearance.getValue(index) + 1);
 				// Vung đống đẻ tìm chữ xuất hiện nhiều nhất
-				while(word_appearance.getValue(index) > word_appearance.getValue(index/2) && index != 0) {
-					Collections.swap(word_appearance, index, index/2);
+				while(wordAppearance.getValue(index) > wordAppearance.getValue(index/2) && index != 0) {
+					Collections.swap(wordAppearance, index, index/2);
 					index = index/2;
 				}
 			}
 		}
-		return word_appearance;
+		return wordAppearance;
 	}
 
 	/**
@@ -101,16 +101,16 @@ public class DataExtract {
 	 * @return
 	 */
 	public static String upperCaseFirst(String word){
-		String[] letter_list = word.split("[ ]");
-		StringBuilder new_word = new StringBuilder();
-		for(String letter : letter_list){
+		String[] letterList = word.split("[ ]");
+		StringBuilder newWord = new StringBuilder();
+		for(String letter : letterList){
 			//Đi từng chữ và viết hoa chữ đầu
-			new_word.append(letter.substring(0, 1).toUpperCase()
+			newWord.append(letter.substring(0, 1).toUpperCase()
 			.concat(letter.substring(1)));
-			new_word.append(" ");
+			newWord.append(" ");
 		}
-		new_word.setLength(new_word.length()-1);
-		return new_word.toString();
+		newWord.setLength(newWord.length()-1);
+		return newWord.toString();
 	}
 
 }
