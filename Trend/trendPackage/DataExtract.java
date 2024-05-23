@@ -6,9 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.json.simple.JSONArray; 
-import org.json.simple.JSONObject; 
+import org.json.simple.JSONObject;
 
-import pairPackage.PairArray; 
+import trendPackage.pairPackage.PairArray; 
 
 /**
  * Dùng để sử lí, lọc các dữ liệu của dữ liệu JSON gắn với object

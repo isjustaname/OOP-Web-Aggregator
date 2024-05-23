@@ -2,7 +2,7 @@ package trendPackage.timeDisplayer;
 
 import java.time.LocalDate;
 
-import pairPackage.PairArray;
+import trendPackage.pairPackage.PairArray;
 
 public interface TimeDisplay {
 

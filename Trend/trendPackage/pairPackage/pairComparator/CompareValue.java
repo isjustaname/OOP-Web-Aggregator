@@ -1,8 +1,8 @@
-package pairPackage.pairComparator;
+package trendPackage.pairPackage.pairComparator;
 
 import java.util.Comparator;
 
-import pairPackage.Pair;
+import trendPackage.pairPackage.Pair;
 
 public class CompareValue implements Comparator<Pair> {
 	

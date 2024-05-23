@@ -1,9 +1,9 @@
-package pairPackage;
+package trendPackage.pairPackage;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import pairPackage.pairComparator.CompareProperty;
-import pairPackage.pairComparator.CompareValue;
+import trendPackage.pairPackage.pairComparator.CompareProperty;
+import trendPackage.pairPackage.pairComparator.CompareValue;
 /** 
 *1 dãy các cặp Pair thêm một số hàm hơi khác với List
 *@param first là dãy thứ 1

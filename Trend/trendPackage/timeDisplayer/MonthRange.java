@@ -2,8 +2,8 @@ package trendPackage.timeDisplayer;
 
 import java.time.LocalDate;
 
-import pairPackage.Pair;
-import pairPackage.PairArray;
+import trendPackage.pairPackage.Pair;
+import trendPackage.pairPackage.PairArray;
 
 /**
  * Liệt kê thời gian theo từng tháng

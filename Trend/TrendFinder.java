@@ -6,9 +6,8 @@ import java.io.IOException;
 import org.json.simple.JSONArray; 
 import org.json.simple.parser.*;
 
-import pairPackage.PairArray;
 import trendPackage.*;
-
+import trendPackage.pairPackage.PairArray;
 import trendPackage.timeDisplayer.*;
 /**
  * 3 phần:

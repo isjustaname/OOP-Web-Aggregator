@@ -1,4 +1,4 @@
-package pairPackage;
+package trendPackage.pairPackage;
 
 /**
  * Một cặp biểu diễn thuộc tính và giá trị của nó
